@@ -15,7 +15,9 @@ Create a git repo in the vars directory to keep track of your changes, it will b
 
 To run a playbook just specify the domain as an extra variable. For example:
 
-`ansible-playbook drupal8_full.yml -e "domain=example.com"`
+```
+ansible-playbook drupal8_full.yml -e "domain=example.com"
+```
 
 ## Composer
 
@@ -25,7 +27,9 @@ https://github.com/drupal-composer/drupal-project
 
 You can run the drupal8_new.yml playbook to create a new project.
 
-`ansible-playbook drupal8_new.yml -e "domain=example.com"`
+```
+ansible-playbook drupal8_new.yml -e "domain=example.com"
+```
 
 ## Ignore files
 
