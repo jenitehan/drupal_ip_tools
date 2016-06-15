@@ -1,0 +1,57 @@
+---
+
+- name: Install Drupal.
+  shell: "drush site-install {{ profile_name }} --db-url=mysql://{{ db_user }}:{{ db_pass }}@localhost/{{ db_name }} install_configure_form.site_default_country='{{ site_default_country }}' install_configure_form.update_status_module='array(FALSE,FALSE)' --account-name={{ account_name }} --account-pass={{ account_pass }} --account-mail={{ account_mail }} --site-mail={{ site_mail }} --site-name={{ site_name }} -y"
+  args:
+    chdir: "{{ docroot }}"
+  tags: d8_install_drupal
+
+- name: Protect settings.php and services.yml files.
+  file:
+    path: "{{ docroot }}/sites/default/{{ item }}"
+    mode: 0644
+  with_items:
+    - settings.php
+    - services.yml
+  become: yes
+  tags: d8_install_protect_files
+
+- name: Make sure files directory is writable.
+  file:
+    path: "{{ files_dir }}"
+    state: directory
+    recurse: yes
+    mode: 0777
+  become: yes
+  tags: d8_install_files_writable
+
+- name: Create config sync directory.
+  file:
+    path: "{{ config_dir }}"
+    state: directory
+    mode: 0777
+  become: yes
+  tags: d8_install_sync_directory
+
+- name: Remove default config directory location.
+  lineinfile:
+    dest: "{{ docroot }}/sites/default/settings.php"
+    regexp: ^\$config_directories(.*)
+    state: absent
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+  become: yes
+  notify: clear drupal 8 cache
+  tags: d8_install_remove_config_settings
+
+- name: Set new config directory location.
+  blockinfile:
+    dest: "{{ docroot }}/sites/default/settings.php"
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+    marker: "# {mark} ANSIBLE MANAGED CONFIG SYNC"
+    block: |
+      $config_directories['sync'] = '../config/sync';
+  become: yes
+  notify: clear drupal 8 cache
+  tags: d8_install_add_config_settings

@@ -1,0 +1,2 @@
+---
+- include: d8_composer_build.yml

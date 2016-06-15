@@ -1,0 +1,62 @@
+---
+
+- name: Add settings.local.php file.
+  copy:
+    src: "{{ docroot }}/sites/example.settings.local.php"
+    dest: "{{ docroot }}/sites/default/settings.local.php"
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+  become: yes
+  tags: d8_dev_setup_settings_local
+
+- name: Enable settings.local.php file.
+  blockinfile:
+    dest: "{{ docroot }}/sites/default/settings.php"
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+    marker: "# {mark} ANSIBLE MANAGED SETTINGS LOCAL"
+    block: |
+      if (file_exists(__DIR__ . '/settings.local.php')) {
+        include __DIR__ . '/settings.local.php';
+      }
+  become: yes
+  notify: clear drupal 8 cache
+  tags: d8_dev_setup_settings_local_enable
+
+- name: Set up settings.local.php file.
+  blockinfile:
+    dest: "{{ docroot }}/sites/default/settings.local.php"
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+    marker: "# {mark} ANSIBLE MANAGED CACHE"
+    block: |
+      $settings['cache']['bins']['render'] = 'cache.backend.null';
+      $settings['cache']['bins']['dynamic_page_cache'] = 'cache.backend.null';
+  become: yes
+  notify: clear drupal 8 cache
+  tags: d8_dev_setup_settings_local_setup
+
+- name: Enable twig debugging.
+  replace:
+    dest: "{{ docroot }}/sites/default/services.yml"
+    regexp: '^    debug: false'
+    replace: '    debug: true'
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+  become: yes
+  notify: clear drupal 8 cache
+  tags: d8_dev_setup_twig_debug
+
+- name: Enable developer modules.
+  command: drush en {{ item }} -y
+  args:
+    chdir: "{{ docroot }}"
+  with_items: "{{ d8_dev_modules }}"
+  tags: d8_dev_setup_modules
+
+# Setting this in the DB and not in settings.local.php since it's handy to change this in the UI sometimes.
+- name: Set up devel module.
+  command: drush config-set devel.settings devel_dumper {{ devel_dumper }} -y
+  args:
+    chdir: "{{ docroot }}"
+  tags: d8_dev_setup_devel_dumper

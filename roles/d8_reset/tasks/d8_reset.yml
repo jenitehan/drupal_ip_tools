@@ -1,0 +1,53 @@
+---
+
+- name: Remove settings and services files.
+  file:
+    path: "{{ docroot }}/sites/default/{{ item }}"
+    state: absent
+  with_items:
+    - settings.php
+    - settings.local.php
+    - services.yml
+  tags: d8_reset_ss_files
+
+- name: Create new settings and services files.
+  copy:
+    src: "{{ docroot }}/sites/default/default.{{ item }}"
+    dest: "{{ docroot }}/sites/default/{{ item }}"
+    mode: 0777
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+  with_items:
+    - settings.php
+    - services.yml
+  tags: d8_reset_ss_files
+
+- name: Remove files directory.
+  file:
+    path: "{{ files_dir }}"
+    state: absent
+  tags: d8_reset_files_dir
+
+- name: Create new files directory.
+  file:
+    path: "{{ files_dir }}"
+    state: directory
+    mode: 0777
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+  tags: d8_reset_files_dir
+
+- name: Remove config directory.
+  file:
+    path: "{{ config_dir }}"
+    state: absent
+  tags: d8_reset_config_dir
+
+- name: Create new config directory.
+  file:
+    path: "{{ config_dir }}"
+    state: directory
+    mode: 0777
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+  tags: d8_reset_config_dir

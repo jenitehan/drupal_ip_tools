@@ -1,0 +1,31 @@
+---
+# Default variables.
+# Passwords can be set in external files or just encrypt this entire file with Ansible Vault and run playbook with --ask-vault-pass.
+
+# Name of host or group from inventory file.
+hosts: local
+
+# Build options
+dev_setup: yes
+
+# Site info - Used during install
+site_default_country: GB
+
+# User 1 info
+account_name: admin
+# Ansible Vault may be used to encrypt the password file.
+account_pass: "{{ lookup('file', '~/.account_pass.txt') }}"
+account_mail: "admin@example.com"
+
+# File ownership
+file_owner: www-data
+file_group: www-data
+
+# Drupal 8 development modules.
+d8_dev_modules:
+  - devel
+  - kint
+  - config_devel
+
+# Devel variables dumper.
+devel_dumper: kint

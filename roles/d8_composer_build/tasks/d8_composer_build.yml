@@ -1,0 +1,35 @@
+---
+
+- name: Create site directory.
+  file:
+    path: "{{ site_dir }}"
+    state: directory
+  tags: d8_composer_build_dir
+
+- name: Remove project directory.
+  file:
+    path: "{{ project_dir }}"
+    state: absent
+  become: yes
+  tags: d8_composer_build_dir
+
+- name: Clone profile git repo.
+  git:
+    repo: "{{ git_repo }}"
+    dest: "{{ project_dir }}"
+    version: "{{ git_version | default('master') }}"
+  tags: d8_composer_build_clone
+
+# Using shell since locally the Ansible Composer module isn't working.
+# Always getting "No JSON object could be decoded." Not sure why, will revisit.
+- name: Composer install project.
+  shell: "{{ composer_path | default('/usr/local/bin/composer') }} install"
+  args:
+    chdir: "{{ project_dir }}"
+  tags: d8_composer_build_install
+
+#- name: Composer module install project.
+#  composer:
+#    command: install
+#    working_dir: "{{ project_dir }}"
+#  tags: d8_composer_build_install

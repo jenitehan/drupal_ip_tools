@@ -1,0 +1,4 @@
+---
+
+- name: Create new Drupal 8 project.
+  shell: "{{ composer_path | default('/usr/local/bin/composer') }} create-project drupal-composer/drupal-project:8.x-dev {{ project_dir }} --stability dev --no-interaction"

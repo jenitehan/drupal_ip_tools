@@ -1,0 +1,5 @@
+[localhost]
+local ansible_connection=local ansible_python_interpreter=/usr/local/bin/python
+
+[server_group]
+exampleserver ansible_host=XXX.XXX.XXX.XXX ansible_port=XXXXX ansible_user=username

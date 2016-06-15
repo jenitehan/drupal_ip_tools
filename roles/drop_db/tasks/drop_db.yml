@@ -1,0 +1,15 @@
+---
+
+- name: Check if Drupal is installed.
+  shell: "drush status"
+  args:
+    chdir: "{{ docroot }}"
+  register: drupal_status
+  tags: drop_db_status
+
+- name: Drop database.
+  shell: "drush sql-drop -y"
+  args:
+    chdir: "{{ docroot }}"
+  when: drupal_status.stdout.find('Successful') != -1
+  tags: drop_db_drop

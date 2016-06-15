@@ -1,0 +1,1 @@
+Example files are located in this directory.  See instructions in project README.txt.

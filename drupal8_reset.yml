@@ -1,0 +1,10 @@
+---
+- name: Reset a Drupal 8 site.
+  vars_files:
+    - vars/defaults.yml
+    - vars/{{ domain }}.yml
+  hosts: "{{ hosts }}"
+  
+  roles:
+    - { role: drop_db, tags: ['drop_db'] }
+    - { role: d8_reset, tags: ['d8_reset'], become: yes }

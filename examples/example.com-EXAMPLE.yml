@@ -1,0 +1,35 @@
+---
+# Variables for example.com
+
+# This site is being built on a server so we need to override the host, otherwise it will be built locally.
+hosts: exampleserver
+
+# Profile info
+profile_name: example_profile
+git_repo: "git@bitbucket.org:username/example_profile.git"
+#git_version: "branch_name" - Uncomment and set to clone specific branch.
+
+# Database info
+db_name: examplecom
+db_user: examplecomuser
+# See user 1 info in defaults.yml for example of using a password file instead of plain text.
+db_pass: examplecompass
+
+# Legacy database info for migrations. Leave this out completely if no migrations are being performed.
+d8_legacy_db_group: upgrade
+d8_legacy_db_name: legacydbname
+d8_legacy_db_user: legacydbuser
+d8_legacy_db_pass: legacydbpass
+
+# Site info
+site_name: "'Example Site'"
+site_mail: "info@example.com"
+
+# Directories - This assumes the project was created with the drupal-project composer template.
+# https://github.com/drupal-composer/drupal-project
+# Need to override all directory vars here since site_dir is used to create the rest.
+site_dir: /server/path/to/site
+project_dir: "{{ site_dir }}/project"
+docroot: "{{ project_dir }}/web"
+files_dir: "{{ docroot }}/sites/default/files"
+config_dir: "{{ project_dir }}/config/sync"

@@ -1,0 +1,13 @@
+---
+- name: Reinstall a Drupal 8 site.
+  vars_files:
+    - vars/defaults.yml
+    - vars/{{ domain }}.yml
+  hosts: "{{ hosts }}"
+  
+  roles:
+    - { role: drop_db, tags: ['drop_db'] }
+    - { role: d8_reset, tags: ['d8_reset'], become: yes }
+    - { role: d8_install, tags: ['d8_install'] }
+    - { role: d8_additional_db, tags: ['d8_additional_db'] }
+    - { role: d8_dev_setup, tags: ['d8_dev_setup'], when: dev_setup }
