@@ -1,0 +1,13 @@
+---
+- name: Build and install a Drupal 7 site.
+  vars_files:
+    - vars/defaults.yml
+    - vars/{{ domain }}.yml
+  hosts: "{{ hosts }}"
+  
+  roles:
+    - { role: drop_db, tags: ['drop_db'] }
+    - { role: d7_make_build, tags: ['d7_make_build'] }
+    - { role: d7_install, tags: ['d7_install'] }
+    - { role: clean_up, tags: ['clean_up'] }
+    - { role: d7_dev_setup, tags: ['d7_dev_setup'], when: dev_setup }

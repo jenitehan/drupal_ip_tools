@@ -1,0 +1,8 @@
+---
+
+# Need to do this after install otherwise it fails.
+- name: Clean up unnecessary files.
+  shell: drush cu
+  args:
+    chdir: "{{ docroot }}"
+  when: drush_clean_up

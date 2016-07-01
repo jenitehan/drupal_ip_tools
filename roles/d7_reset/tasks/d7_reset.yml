@@ -1,0 +1,44 @@
+---
+  
+- name: Remove settings.php file.
+  file:
+    path: "{{ docroot }}/sites/default/settings.php"
+    state: absent
+  tags: d7_reset_remove_settings_file
+  
+- name: Remove files directory.
+  file:
+    path: "{{ files_dir }}"
+    state: absent
+  tags: d7_reset_remove_files_dir
+  
+- name: Create settings.php file.
+  copy:
+    src: "{{ docroot }}/sites/default/default.settings.php"
+    dest: "{{ docroot }}/sites/default/settings.php"
+    remote_src: yes
+    mode: 0757
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+  tags: d7_reset_create_settings_file
+
+- name: Create files directory.
+  file:
+    path: "{{ files_dir }}"
+    mode: 0757
+    state: directory
+    recurse: yes
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+  tags: d7_reset_files_directory
+  when: files_dir_type == 'directory'
+
+- name: Create files symlink.
+  file:
+    src: "{{ files_symlink_dir }}"
+    dest: "{{ files_dir }}"
+    state: link
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+  tags: d7_reset_files_directory
+  when: files_dir_type == 'symlink'

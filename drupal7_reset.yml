@@ -1,0 +1,10 @@
+---
+- name: Reset a Drupal 7 site.
+  vars_files:
+    - vars/defaults.yml
+    - vars/{{ domain }}.yml
+  hosts: "{{ hosts }}"
+  
+  roles:
+    - { role: drop_db, tags: ['drop_db'] }
+    - { role: d7_reset, tags: ['d7_reset'], become: yes  }

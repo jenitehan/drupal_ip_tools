@@ -1,0 +1,12 @@
+---
+- name: Reinstall a Drupal 7 site.
+  vars_files:
+    - vars/defaults.yml
+    - vars/{{ domain }}.yml
+  hosts: "{{ hosts }}"
+  
+  roles:
+    - { role: drop_db, tags: ['drop_db'] }
+    - { role: d7_reset, tags: ['d7_reset'], become: yes  }
+    - { role: d7_install, tags: ['d7_install'] }
+    - { role: d7_dev_setup, tags: ['d7_dev_setup'], when: dev_setup }

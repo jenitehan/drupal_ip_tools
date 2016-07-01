@@ -1,0 +1,58 @@
+---
+
+- name: Create site directory.
+  file:
+    path: "{{ site_dir }}"
+    state: directory
+  tags: d7_make_build_dir
+
+- name: Remove docroot directory.
+  file:
+    path: "{{ docroot }}"
+    state: absent
+  become: yes
+  tags: d7_make_build_dir
+  
+- name: Clone profile git repo.
+  git:
+    repo: "{{ git_repo }}"
+    dest: "{{ site_dir }}/{{ profile_name }}"
+    version: "{{ git_version | default('master') }}"
+    force: yes
+  tags: d7_make_build_clone_repo
+
+- name: Add git branch to build make file.
+  lineinfile:
+    dest: "{{ site_dir }}/{{ profile_name }}/{{ make_build_file }}"
+    line: 'projects[{{ profile_name }}][download][branch] = "{{ git_version }}"'
+  when: git_version is defined
+  tags: d7_make_build_add_git_branch
+
+- name: Run drush make build file.
+  shell: drush make {{ site_dir }}/{{ profile_name }}/{{ make_build_file }} {{ docroot }} --concurrency=6 --working-copy
+  tags: d7_make_build_drush_make
+
+- name: Create files directory.
+  file:
+    path: "{{ files_dir }}"
+    mode: 0757
+    state: directory
+    recurse: yes
+  tags: d7_make_build_files_directory
+  when: files_dir_type == 'directory'
+
+- name: Create files symlink.
+  file:
+    src: "{{ files_symlink_dir }}"
+    dest: "{{ files_dir }}"
+    state: link
+  tags: d7_make_build_files_directory
+  when: files_dir_type == 'symlink'
+
+- name: Create settings.php file.
+  copy:
+    src: "{{ docroot }}/sites/default/default.settings.php"
+    dest: "{{ docroot }}/sites/default/settings.php"
+    remote_src: yes
+    mode: 0757
+  tags: d7_make_build_settings_file

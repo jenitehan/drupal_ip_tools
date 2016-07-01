@@ -7,6 +7,7 @@ hosts: local
 
 # Build options
 dev_setup: yes
+files_dir_type: directory
 
 # Site info - Used during install
 site_default_country: GB
@@ -29,3 +30,10 @@ d8_dev_modules:
 
 # Devel variables dumper.
 devel_dumper: kint
+
+# Drupal 7 development modules.
+d7_dev_modules:
+  - devel
+
+# Drush clean up
+drush_clean_up: no

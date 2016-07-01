@@ -1,0 +1,35 @@
+---
+
+- name: Enable developer modules.
+  command: drush en {{ item }} -y
+  args:
+    chdir: "{{ docroot }}"
+  with_items: "{{ d7_dev_modules }}"
+  tags: d7_dev_setup_modules
+
+- name: Set up devel module.
+  command: drush vset devel_raw_names 1 -y
+  args:
+    chdir: "{{ docroot }}"
+  tags: d7_dev_setup_devel
+
+# We want to write to this directory from the Features UI.
+- name: Make sure profile features are writable.
+  file:
+    path: "{{ docroot }}/profiles/{{ profile_name }}/modules/features"
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+    mode: 0777
+    state: directory
+    recurse: yes
+  become: yes
+  tags: d7_dev_setup_features
+
+# We don't want all features to be writeable in the git repo.
+- name: Set git to ignore file permission changes.
+  git_config:
+    name: core.fileMode
+    value: false
+    scope: local
+    repo: "{{ docroot }}/profiles/{{ profile_name }}"
+  tags: d7_dev_setup_git_file_perms
