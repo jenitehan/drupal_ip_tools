@@ -33,3 +33,17 @@ project_dir: "{{ site_dir }}/project"
 docroot: "{{ project_dir }}/web"
 files_dir: "{{ docroot }}/sites/default/files"
 config_dir: "{{ project_dir }}/config/sync"
+
+# Additional users
+additional_users:
+  
+  - name: exampleadmin
+    pass: exampleadminpass
+    email: exampleadmin@example.com
+    roles:
+      - administrator
+  
+  - name: exampleuser
+    pass: exampleuserpass
+    email: exampleuser@example.com
+    roles: []
