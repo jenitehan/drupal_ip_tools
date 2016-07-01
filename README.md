@@ -48,9 +48,13 @@ That's necessary since we're rebuilding and reinstalling a lot. The roles includ
  - **drupal8_reset:** Uninstalls the site and prepares it to be reinstalled. Useful when testing manual installation.
  - **drupal8_new:** Creates a new Drupal 8 codebase from the drupal-project Composer template.
 
+## Drupal 7
+
+Drupal 7 roles and playbooks assume a Drush make build.
+
 ## Roadmap:
 
  - Better documentation for variables.
- - Most roles have D8 prefixing them, so D7 versions may be done as well.
+ - Documentation for Drupal 7 roles and playbooks.
  - Share common handlers. Still using handlers in roles directories since that wasn't working for a while when Ansible 2.0 was released.
  - Use Ansible Composer module instead of shell. It's not working at all for me locally, but shell works fine for now.
