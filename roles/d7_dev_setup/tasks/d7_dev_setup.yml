@@ -1,14 +1,14 @@
 ---
 
 - name: Enable developer modules.
-  command: drush en {{ item }} -y
+  shell: drush en {{ item }} -y
   args:
     chdir: "{{ docroot }}"
   with_items: "{{ d7_dev_modules }}"
   tags: d7_dev_setup_modules
 
 - name: Set up devel module.
-  command: drush vset devel_raw_names 1 -y
+  shell: drush vset devel_raw_names 1 -y
   args:
     chdir: "{{ docroot }}"
   tags: d7_dev_setup_devel
