@@ -13,6 +13,13 @@
     chdir: "{{ docroot }}"
   tags: d7_dev_setup_devel
 
+- name: Generate dummy content.
+  shell: drush generate-content {{ generate_number_nodes }} --types="{{ generate_types }}" -y
+  args:
+    chdir: "{{ docroot }}"
+  when: generate_content
+  tags: d7_dev_setup_modules
+
 # We want to write to this directory from the Features UI.
 - name: Make sure profile features are writable.
   file:

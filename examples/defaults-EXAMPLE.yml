@@ -35,5 +35,10 @@ devel_dumper: kint
 d7_dev_modules:
   - devel
 
+# Devel generate
+generate_content: no
+generate_number_nodes: 50
+generate_types: "page,article"
+
 # Drush clean up
 drush_clean_up: no
