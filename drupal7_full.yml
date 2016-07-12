@@ -10,5 +10,6 @@
     - { role: d7_make_build, tags: ['d7_make_build'] }
     - { role: d7_install, tags: ['d7_install'] }
     - { role: users, tags: ['users'] }
+    - { role: post_install, tags: ['post_install'] }
     - { role: clean_up, tags: ['clean_up'] }
     - { role: d7_dev_setup, tags: ['d7_dev_setup'], when: dev_setup }

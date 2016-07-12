@@ -47,3 +47,8 @@ additional_users:
     pass: exampleuserpass
     email: exampleuser@example.com
     roles: []
+
+# Post install.
+post_install_modules:
+  - module_name
+  - another_module_name

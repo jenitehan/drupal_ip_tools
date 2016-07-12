@@ -1,0 +1,9 @@
+---
+
+- name: Enable modules.
+  shell: drush en {{ item }} -y
+  args:
+    chdir: "{{ docroot }}"
+  with_items: "{{ post_install_modules }}"
+  when: post_install_modules is defined
+  tags: post_install_modules
