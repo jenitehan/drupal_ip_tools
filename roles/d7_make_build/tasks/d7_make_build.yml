@@ -12,6 +12,14 @@
     state: absent
   become: yes
   tags: d7_make_build_dir
+
+- name: Remove private files directory.
+  file:
+    path: "{{ private_files_dir }}"
+    state: absent
+  when: private_files_dir_type is defined and private_files_dir_type == 'directory'
+  become: yes
+  tags: d7_reset_remove_files_dir
   
 - name: Clone profile git repo.
   git:
@@ -40,6 +48,15 @@
     recurse: yes
   tags: d7_make_build_files_directory
   when: files_dir_type == 'directory'
+
+- name: Create private files directory.
+  file:
+    path: "{{ private_files_dir }}"
+    mode: 0757
+    state: directory
+    recurse: yes
+  tags: d7_make_build_files_directory
+  when: private_files_dir_type is defined and private_files_dir_type == 'directory'
 
 - name: Create files symlink.
   file:

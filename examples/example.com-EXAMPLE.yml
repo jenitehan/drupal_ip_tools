@@ -32,6 +32,7 @@ site_dir: /server/path/to/site
 project_dir: "{{ site_dir }}/project"
 docroot: "{{ project_dir }}/web"
 files_dir: "{{ docroot }}/sites/default/files"
+private_files_dir: "{{ site_dir }}/private"
 config_dir: "{{ project_dir }}/config/sync"
 
 # Additional users

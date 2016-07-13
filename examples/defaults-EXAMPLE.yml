@@ -8,6 +8,7 @@ hosts: local
 # Build options
 dev_setup: yes
 files_dir_type: directory
+private_files_dir_type: directory
 
 # Site info - Used during install
 site_default_country: GB

@@ -11,6 +11,13 @@
     path: "{{ files_dir }}"
     state: absent
   tags: d7_reset_remove_files_dir
+
+- name: Remove private files directory.
+  file:
+    path: "{{ private_files_dir }}"
+    state: absent
+  when: private_files_dir_type is defined and private_files_dir_type == 'directory'
+  tags: d7_reset_remove_files_dir
   
 - name: Create settings.php file.
   copy:
@@ -30,8 +37,19 @@
     recurse: yes
     owner: "{{ file_owner }}"
     group: "{{ file_group }}"
-  tags: d7_reset_files_directory
   when: files_dir_type == 'directory'
+  tags: d7_reset_files_directory
+
+- name: Create private files directory.
+  file:
+    path: "{{ private_files_dir }}"
+    mode: 0757
+    state: directory
+    recurse: yes
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+  when: private_files_dir_type is defined and private_files_dir_type == 'directory'
+  tags: d7_make_build_files_directory
 
 - name: Create files symlink.
   file:

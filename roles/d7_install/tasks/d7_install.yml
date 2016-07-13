@@ -20,6 +20,16 @@
     path: "{{ files_dir }}"
     state: directory
     recurse: yes
-    mode: 0777
+    mode: 0757
   become: yes
+  tags: d7_install_files_writable
+
+- name: Make sure private files directory is writable.
+  file:
+    path: "{{ private_files_dir }}"
+    state: directory
+    recurse: yes
+    mode: 0757
+  become: yes
+  when: private_files_dir_type is defined and private_files_dir_type == 'directory'
   tags: d7_install_files_writable
