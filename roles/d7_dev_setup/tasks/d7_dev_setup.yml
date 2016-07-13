@@ -20,6 +20,17 @@
   when: generate_content
   tags: d7_dev_setup_modules
 
+# Devel generate messes with file permissions.
+- name: Make sure files directory is writable, again.
+  file:
+    path: "{{ files_dir }}"
+    state: directory
+    recurse: yes
+    mode: 0777
+  become: yes
+  when: generate_content
+  tags: d7_install_files_writable
+
 # We want to write to this directory from the Features UI.
 - name: Make sure profile features are writable.
   file:

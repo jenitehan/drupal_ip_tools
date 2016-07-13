@@ -20,6 +20,6 @@
     path: "{{ files_dir }}"
     state: directory
     recurse: yes
-    mode: 0757
+    mode: 0777
   become: yes
   tags: d7_install_files_writable
