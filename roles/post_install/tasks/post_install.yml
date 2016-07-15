@@ -7,3 +7,10 @@
   with_items: "{{ post_install_modules }}"
   when: post_install_modules is defined
   tags: post_install_modules
+
+- name: Build search index.
+  shell: drush search-index
+  args:
+    chdir: "{{ docroot }}"
+  when: build_search_index
+  tags: post_install_modules

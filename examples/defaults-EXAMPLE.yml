@@ -43,3 +43,6 @@ generate_types: "page,article"
 
 # Drush clean up
 drush_clean_up: no
+
+# Search index
+build_search_index: no

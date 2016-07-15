@@ -10,5 +10,5 @@
     - { role: d7_reset, tags: ['d7_reset'], become: yes  }
     - { role: d7_install, tags: ['d7_install'] }
     - { role: users, tags: ['users'] }
-    - { role: post_install, tags: ['post_install'] }
     - { role: d7_dev_setup, tags: ['d7_dev_setup'], when: dev_setup }
+    - { role: post_install, tags: ['post_install'] }
