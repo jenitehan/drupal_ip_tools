@@ -14,3 +14,11 @@
     chdir: "{{ docroot }}"
   when: build_search_index
   tags: post_install_modules
+
+- name: Generate commerce orders for additional users.
+  shell: drush --user={{ item.name }} commerce-order-add {{ item.commerce_order }} && drush --user={{ item.name }} commerce-order-pay
+  args:
+    chdir: "{{ docroot }}"
+  with_items: "{{ additional_users }}"
+  when: item.commerce_order is defined
+  tags: post_install_commerce_orders

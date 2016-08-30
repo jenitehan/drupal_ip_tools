@@ -36,6 +36,7 @@ private_files_dir: "{{ site_dir }}/private"
 config_dir: "{{ project_dir }}/config/sync"
 
 # Additional users
+# Creating commerce orders requires Commerce Drush to be installed in site.
 additional_users:
   
   - name: exampleadmin
@@ -48,6 +49,7 @@ additional_users:
     pass: exampleuserpass
     email: exampleuser@example.com
     roles: []
+    commerce_order: product_sku
 
 # Post install.
 post_install_modules:
