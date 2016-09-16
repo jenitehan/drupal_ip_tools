@@ -16,7 +16,7 @@
   file:
     path: "{{ private_files_dir }}"
     state: absent
-  when: private_files_dir_type is defined and private_files_dir_type == 'directory'
+  when: private_files_dir is defined
   tags: d7_reset_remove_files_dir
   
 - name: Create settings.php file.
@@ -60,3 +60,13 @@
     group: "{{ file_group }}"
   tags: d7_reset_files_directory
   when: files_dir_type == 'symlink'
+
+- name: Create private files symlink.
+  file:
+    src: "{{ private_files_symlink_dir }}"
+    dest: "{{ private_files_dir }}"
+    state: link
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+  tags: d7_make_build_files_directory
+  when: private_files_dir_type == 'symlink'
