@@ -9,7 +9,9 @@
   tags: post_install_modules
   
 - name: Run migrations.
-  command: drush -r {{ docroot }} mi --group={{ item }} --user=1
+  shell: drush mi --group={{ item }}
+  args:
+    chdir: "{{ docroot }}"
   with_items: "{{ migrate_groups }}"
   when: migrate_groups is defined
   tags: post_install_migrate
