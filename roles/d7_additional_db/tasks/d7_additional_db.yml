@@ -1,0 +1,21 @@
+---
+
+- name: Add additional database info to Drupal 7 settings.php.
+  blockinfile:
+    dest: "{{ docroot }}/sites/default/settings.php"
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+    marker: "# {mark} ANSIBLE MANAGED ADDITIONAL DATABASE"
+    block: |
+      $databases['{{ d7_legacy_db_group }}']['default'] = array(
+        'database' => '{{ d7_legacy_db_name }}',
+        'username' => '{{ d7_legacy_db_user }}',
+        'password' => '{{ d7_legacy_db_pass }}',
+        'host' => 'localhost',
+        'port' => '',
+        'driver' => 'mysql',
+        'prefix' => '',
+      );
+  become: yes
+  when: d7_legacy_db_name is defined
+  notify: clear drupal 7 cache

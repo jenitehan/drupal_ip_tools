@@ -55,3 +55,7 @@ additional_users:
 post_install_modules:
   - module_name
   - another_module_name
+
+migrate_groups:
+  - group1
+  - group2

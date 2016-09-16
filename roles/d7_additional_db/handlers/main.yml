@@ -1,0 +1,6 @@
+---
+
+- name: clear drupal 7 cache
+  command: drush cc all
+  args:
+    chdir: "{{ docroot }}"
