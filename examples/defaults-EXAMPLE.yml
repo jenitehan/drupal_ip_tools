@@ -41,6 +41,13 @@ generate_content: no
 generate_number_nodes: 50
 generate_types: "page,article"
 
+# Reroute email
+reroute_email: no
+reroute_email_vars:
+  - { name: 'reroute_email_address', value: 'name@example.com' }
+  - { name: 'reroute_email_enable', value: 1 }
+  - { name: 'reroute_email_enable_message', value: 1 }
+
 # Drush clean up
 drush_clean_up: no
 

@@ -20,6 +20,14 @@
   when: generate_content
   tags: d7_dev_setup_modules
 
+- name: Set up reroute email module.
+  shell: drush vset {{ item.name }} {{ item.value }} -y
+  args:
+    chdir: "{{ docroot }}"
+  with_items: "{{ reroute_email_vars }}"
+  when: reroute_email
+  tags: d7_dev_setup_reroute_email
+
 # Devel generate messes with file permissions.
 - name: Make sure files directory is writable, again.
   file:
