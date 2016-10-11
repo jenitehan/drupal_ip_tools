@@ -16,6 +16,14 @@
   when: migrate_groups is defined
   tags: post_install_migrate
 
+- name: Enable modules post-migration.
+  shell: drush en {{ item }} -y
+  args:
+    chdir: "{{ docroot }}"
+  with_items: "{{ post_migrate_modules }}"
+  when: post_migrate_modules is defined
+  tags: post_migrate_modules
+
 - name: Build search index.
   shell: drush search-index
   args:
