@@ -27,6 +27,7 @@
     dest: "{{ site_dir }}/{{ profile_name }}"
     version: "{{ git_version | default('master') }}"
     force: yes
+    accept_hostkey: yes
   tags: d7_make_build_clone_repo
 
 - name: Add git branch to build make file.
@@ -43,7 +44,7 @@
 - name: Create files directory.
   file:
     path: "{{ files_dir }}"
-    mode: 0757
+    mode: 0777
     state: directory
     recurse: yes
   tags: d7_make_build_files_directory
@@ -52,7 +53,7 @@
 - name: Create private files directory.
   file:
     path: "{{ private_files_dir }}"
-    mode: 0757
+    mode: 0777
     state: directory
     recurse: yes
   tags: d7_make_build_files_directory
@@ -79,5 +80,40 @@
     src: "{{ docroot }}/sites/default/default.settings.php"
     dest: "{{ docroot }}/sites/default/settings.php"
     remote_src: yes
-    mode: 0757
+    mode: 0777
   tags: d7_make_build_settings_file
+
+- name: Add database info to Drupal 7 settings.php.
+  blockinfile:
+    dest: "{{ docroot }}/sites/default/settings.php"
+    marker: "# {mark} ANSIBLE MANAGED DRUPAL DEFAULT DATABASE"
+    block: |
+      $databases['default']['default'] = array(
+        'database' => '{{ db_name }}',
+        'username' => '{{ db_user }}',
+        'password' => '{{ db_pass }}',
+        'host' => 'localhost',
+        'port' => '',
+        'driver' => 'mysql',
+        'prefix' => '',
+        {% if multibyte_utf8 %}
+        'charset' => 'utf8mb4',
+        'collation' => 'utf8mb4_general_ci',
+        {% endif %}
+      );
+  tags: d7_make_build_settings_file
+
+
+- name: Update .htaccess to point to https
+  blockinfile:
+    backup: yes
+    dest: "{{ docroot }}/.htaccess"
+    insertafter: "# To redirect all users to access the site WITHOUT the 'www.' prefix,"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK SSL REDIRECT"
+    block: |
+      RewriteCond %{HTTPS} off
+      RewriteRule ^ https://%1%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+      RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+      RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+  when: redirect_ssl
+  tags: build_htaccess

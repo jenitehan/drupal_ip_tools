@@ -1,7 +1,8 @@
 ---
 
 - name: Install Drupal.
-  shell: "drush site-install {{ profile_name }} --db-url=mysql://{{ db_user }}:{{ db_pass }}@localhost/{{ db_name }} install_configure_form.site_default_country='{{ site_default_country }}' install_configure_form.update_status_module='array(FALSE,FALSE)' --account-name={{ account_name }} --account-pass={{ account_pass }} --account-mail={{ account_mail }} --site-mail={{ site_mail }} --site-name={{ site_name }} -y"
+  #shell: "drush site-install {{ profile_name }} --db-url=mysql://{{ db_user }}:{{ db_pass }}@localhost/{{ db_name }} install_configure_form.site_default_country='{{ site_default_country }}' install_configure_form.update_status_module='array(FALSE,FALSE)' --account-name={{ account_name }} --account-pass={{ account_pass }} --account-mail={{ account_mail }} --site-mail={{ site_mail }} --site-name={{ site_name }} -y"
+  shell: "drush site-install {{ profile_name }} install_configure_form.site_default_country='{{ site_default_country }}' install_configure_form.update_status_module='array(FALSE,FALSE)' --account-name={{ account_name }} --account-pass={{ account_pass }} --account-mail={{ account_mail }} --site-mail={{ site_mail }} --site-name={{ site_name }} -y"
   args:
     chdir: "{{ docroot }}"
   tags: d7_install_drupal
@@ -20,7 +21,7 @@
     path: "{{ files_dir }}"
     state: directory
     recurse: yes
-    mode: 0757
+    mode: 0777
   become: yes
   tags: d7_install_files_writable
 
@@ -29,7 +30,7 @@
     path: "{{ private_files_dir }}"
     state: directory
     recurse: yes
-    mode: 0757
+    mode: 0777
   become: yes
   when: private_files_dir_type is defined and private_files_dir_type == 'directory'
   tags: d7_install_files_writable

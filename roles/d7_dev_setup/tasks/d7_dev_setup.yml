@@ -34,7 +34,7 @@
     path: "{{ files_dir }}"
     state: directory
     recurse: yes
-    mode: 0757
+    mode: 0777
   become: yes
   when: generate_content
   tags: d7_install_files_writable
@@ -44,7 +44,7 @@
     path: "{{ private_files_dir }}"
     state: directory
     recurse: yes
-    mode: 0757
+    mode: 0777
   become: yes
   when: generate_content and private_files_dir_type is defined and private_files_dir_type == 'directory'
   tags: d7_install_files_writable
