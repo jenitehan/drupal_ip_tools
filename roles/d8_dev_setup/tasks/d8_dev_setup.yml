@@ -6,6 +6,7 @@
     dest: "{{ docroot }}/sites/default/settings.local.php"
     owner: "{{ file_owner }}"
     group: "{{ file_group }}"
+    remote_src: yes
   become: yes
   tags: d8_dev_setup_settings_local
 
