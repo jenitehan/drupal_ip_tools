@@ -4,7 +4,7 @@
   shell: drush en {{ item }} -y
   args:
     chdir: "{{ docroot }}"
-  with_items: "{{ post_install_modules }}"
+  with_items: "{{ post_install_modules|default([]) }}"
   when: post_install_modules is defined
   tags: post_install_modules
   
@@ -12,7 +12,7 @@
   shell: drush mi --group={{ item }}
   args:
     chdir: "{{ docroot }}"
-  with_items: "{{ migrate_groups }}"
+  with_items: "{{ migrate_groups|default([]) }}"
   when: migrate_groups is defined
   tags: post_install_migrate
 
@@ -20,7 +20,7 @@
   shell: drush en {{ item }} -y
   args:
     chdir: "{{ docroot }}"
-  with_items: "{{ post_migrate_modules }}"
+  with_items: "{{ post_migrate_modules|default([]) }}"
   when: post_migrate_modules is defined
   tags: post_migrate_modules
 
