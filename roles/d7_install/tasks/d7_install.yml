@@ -32,5 +32,5 @@
     recurse: yes
     mode: 0777
   become: yes
-  when: private_files_dir_type is defined and private_files_dir_type == 'directory'
+  when: private_files and private_files_dir_type == 'directory'
   tags: d7_install_files_writable
