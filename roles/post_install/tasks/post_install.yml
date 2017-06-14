@@ -38,3 +38,11 @@
   with_items: "{{ additional_users }}"
   when: item.commerce_order is defined
   tags: post_install_commerce_orders
+
+- name: Run any additional commands.
+  shell: "{{ item }}"
+  args:
+    chdir: "{{ docroot }}"
+  with_items: "{{ post_install_add_commands|default([]) }}"
+  when: post_install_add_commands is defined
+  tags: post_install_add_commands

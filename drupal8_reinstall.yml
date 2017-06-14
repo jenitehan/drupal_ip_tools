@@ -11,3 +11,4 @@
     - { role: d8_install, tags: ['d8_install'] }
     - { role: d8_additional_db, tags: ['d8_additional_db'] }
     - { role: d8_dev_setup, tags: ['d8_dev_setup'], when: dev_setup }
+    - { role: post_install, tags: ['post_install'] }
