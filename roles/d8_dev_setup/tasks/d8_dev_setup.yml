@@ -37,6 +37,19 @@
   notify: clear drupal 8 cache
   tags: d8_dev_setup_settings_local_setup
 
+- name: Add additional lines to settings.local.php.
+  lineinfile:
+    dest: "{{ docroot }}/sites/default/settings.local.php"
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+    state: present
+    line: "{{ item }}"
+  become: yes
+  with_items: "{{ settings_local_additional_lines }}"
+  when: settings_local_additional_lines is defined
+  notify: clear drupal 8 cache
+  tags: d8_dev_setup_settings_local_additional_lines
+
 - name: Enable twig debugging.
   replace:
     dest: "{{ docroot }}/sites/default/services.yml"
