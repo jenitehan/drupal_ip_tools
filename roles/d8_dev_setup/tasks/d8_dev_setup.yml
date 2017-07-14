@@ -71,6 +71,16 @@
   notify: clear drupal 8 cache
   tags: d8_dev_setup_twig_debug
 
+- name: Protect settings.local.php and services.yml files.
+  file:
+    path: "{{ docroot }}/sites/default/{{ item }}"
+    mode: 0644
+  with_items:
+    - settings.local.php
+    - services.yml
+  become: yes
+  tags: d8_dev_setup_protect_files
+
 - name: Enable developer modules.
   command: drush en {{ item }} -y
   args:

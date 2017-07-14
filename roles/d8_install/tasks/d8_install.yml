@@ -7,6 +7,13 @@
     chdir: "{{ docroot }}"
   tags: d8_install_drupal
 
+- name: Protect settings.php file.
+  file:
+    path: "{{ docroot }}/sites/default/settings.php"
+    mode: 0644
+  become: yes
+  tags: d8_install_protect_files
+
 - name: Make sure files directory is writable.
   file:
     path: "{{ files_dir }}"
