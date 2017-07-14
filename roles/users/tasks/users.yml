@@ -15,4 +15,5 @@
   with_subelements:
     - "{{ additional_users }}"
     - roles
+  when: additional_users is defined
   tags: users_add_roles
