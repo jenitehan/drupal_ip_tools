@@ -10,16 +10,13 @@
     - services.yml
   tags: d8_reset_ss_files
 
-- name: Create new settings and services files.
+- name: Create new settings file.
   copy:
-    src: "{{ docroot }}/sites/default/default.{{ item }}"
-    dest: "{{ docroot }}/sites/default/{{ item }}"
+    src: "{{ docroot }}/sites/default/default.settings.php"
+    dest: "{{ docroot }}/sites/default/settings.php"
     mode: 0777
     owner: "{{ file_owner }}"
     group: "{{ file_group }}"
-  with_items:
-    - settings.php
-    - services.yml
   tags: d8_reset_ss_files
 
 - name: Remove files directory.
