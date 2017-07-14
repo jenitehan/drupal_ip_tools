@@ -50,6 +50,16 @@
   notify: clear drupal 8 cache
   tags: d8_dev_setup_settings_local_additional_lines
 
+- name: Add services.yml file.
+  copy:
+    src: "{{ docroot }}/sites/default/default.services.yml"
+    dest: "{{ docroot }}/sites/default/services.yml"
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+    remote_src: yes
+  become: yes
+  tags: d8_dev_setup_settings_local
+
 - name: Enable twig debugging.
   replace:
     dest: "{{ docroot }}/sites/default/services.yml"
