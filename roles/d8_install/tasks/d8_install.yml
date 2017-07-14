@@ -7,16 +7,6 @@
     chdir: "{{ docroot }}"
   tags: d8_install_drupal
 
-- name: Protect settings.php and services.yml files.
-  file:
-    path: "{{ docroot }}/sites/default/{{ item }}"
-    mode: 0644
-  with_items:
-    - settings.php
-    - services.yml
-  become: yes
-  tags: d8_install_protect_files
-
 - name: Make sure files directory is writable.
   file:
     path: "{{ files_dir }}"
