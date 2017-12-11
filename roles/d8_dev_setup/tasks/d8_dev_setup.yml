@@ -33,6 +33,7 @@
     block: |
       $settings['cache']['bins']['render'] = 'cache.backend.null';
       $settings['cache']['bins']['dynamic_page_cache'] = 'cache.backend.null';
+      $settings['cache']['bins']['page'] = 'cache.backend.null';
   become: yes
   notify: clear drupal 8 cache
   tags: d8_dev_setup_settings_local_setup
@@ -50,34 +51,27 @@
   notify: clear drupal 8 cache
   tags: d8_dev_setup_settings_local_additional_lines
 
-- name: Add services.yml file.
-  copy:
-    src: "{{ docroot }}/sites/default/default.services.yml"
-    dest: "{{ docroot }}/sites/default/services.yml"
-    owner: "{{ file_owner }}"
-    group: "{{ file_group }}"
-    remote_src: yes
-  become: yes
-  tags: d8_dev_setup_settings_local
-
 - name: Enable twig debugging.
-  replace:
-    dest: "{{ docroot }}/sites/default/services.yml"
-    regexp: '^    debug: false'
-    replace: '    debug: true'
+  blockinfile:
+    dest: "{{ docroot }}/sites/development.services.yml"
     owner: "{{ file_owner }}"
     group: "{{ file_group }}"
+    marker: "# {mark} ANSIBLE MANAGED TWIG DEBUGGING"
+    block: |
+      # This line is here so the line below gets indented properly.
+        twig.config:
+          debug: true
+          auto_reload: true
+          cache: false
+    insertafter: "parameters:"
   become: yes
   notify: clear drupal 8 cache
   tags: d8_dev_setup_twig_debug
 
-- name: Protect settings.local.php and services.yml files.
+- name: Protect settings.local.php file.
   file:
-    path: "{{ docroot }}/sites/default/{{ item }}"
+    path: "{{ docroot }}/sites/default/settings.local.php"
     mode: 0644
-  with_items:
-    - settings.local.php
-    - services.yml
   become: yes
   tags: d8_dev_setup_protect_files
 

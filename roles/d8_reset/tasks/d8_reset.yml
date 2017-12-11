@@ -1,14 +1,13 @@
 ---
 
-- name: Remove settings and services files.
+- name: Remove settings files.
   file:
     path: "{{ docroot }}/sites/default/{{ item }}"
     state: absent
   with_items:
     - settings.php
     - settings.local.php
-    - services.yml
-  tags: d8_reset_ss_files
+  tags: d8_reset_settings_files
 
 - name: Create new settings file.
   copy:
@@ -17,7 +16,25 @@
     mode: 0777
     owner: "{{ file_owner }}"
     group: "{{ file_group }}"
-  tags: d8_reset_ss_files
+  tags: d8_reset_settings_files
+
+- name: Remove twig debugging.
+  blockinfile:
+    dest: "{{ docroot }}/sites/development.services.yml"
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+    marker: "# {mark} ANSIBLE MANAGED TWIG DEBUGGING"
+    block: |
+      # This line is here so the line below gets indented properly.
+        twig.config:
+          debug: true
+          auto_reload: true
+          cache: false
+    insertafter: "parameters:"
+    state: absent
+  become: yes
+  notify: clear drupal 8 cache
+  tags: d8_reset_remove_twig_debug
 
 - name: Remove files directory.
   file:
