@@ -14,6 +14,7 @@
     chdir: "{{ docroot }}"
   with_items: "{{ migrate_groups|default([]) }}"
   when: migrate_groups is defined
+  ignore_errors: yes
   tags: post_install_migrate
 
 - name: Enable modules post-migration.
