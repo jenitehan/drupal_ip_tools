@@ -13,8 +13,9 @@ private_files_dir_type: directory
 multibyte_utf8: no
 redirect_ssl: no
 
-# Site info - Used during install
+# Install options.
 site_default_country: GB
+db_host: localhost
 
 # User 1 info
 account_name: admin
