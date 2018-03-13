@@ -27,6 +27,9 @@ account_mail: "admin@example.com"
 file_owner: www-data
 file_group: www-data
 
+# Sync additional site.
+sync_site: no
+
 # Drupal 8 development modules.
 d8_dev_modules:
   - devel

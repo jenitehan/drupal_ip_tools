@@ -1,0 +1,89 @@
+---
+- name: Create source database dump with MySQL.
+  mysql_db:
+    name: "{{ sync_site_db_name }}"
+    state: dump
+    target: "{{ sync_site_dump_dir }}/{{ sync_site_db_name }}.sql"
+    login_user: "{{ sync_site_db_user }}"
+    login_password: "{{ sync_site_db_pass }}"
+    login_host: "{{ sync_site_db_host }}"
+  delegate_to: "{{ sync_site_db_source }}"
+  when: sync_site_db and sync_site_method == 'mysqldump'
+  tags: sync_site_db_dump
+
+- name: Create source database dump with Drush.
+  shell: "drush sql-dump --result-file={{ sync_site_dump_dir }}/{{ sync_site_db_name }}.sql"
+  args:
+    chdir: "{{ sync_site_source_drupal_root }}"
+  delegate_to: "{{ sync_site_db_source }}"
+  when: sync_site_db and sync_site_method == 'drush'
+  tags: sync_site_db_dump
+
+# Synchronize module is giving me shit, so we'll just scp this over.
+# @todo: get synchronize module working.
+- name: Copy database dump to destination server.
+  shell: "scp {{ hostvars[sync_site_db_source]['ansible_user'] }}@{{ hostvars[sync_site_db_source]['ansible_ssh_host'] }}:{{ sync_site_dump_dir }}/{{ sync_site_db_name }}.sql {{ sync_site_dump_dest }}/"
+  when: sync_site_db
+  tags: sync_site_db_dump_copy
+
+- name: Remove database on destination server.
+  mysql_db:
+    name: "{{ d8_legacy_db_name }}"
+    state: absent
+    login_user: "{{ d8_legacy_db_user }}"
+    login_password: "{{ d8_legacy_db_pass }}"
+  when: sync_site_db
+  tags: sync_site_db_recreate
+
+- name: Create database on destination server.
+  mysql_db:
+    name: "{{ d8_legacy_db_name }}"
+    state: present
+    login_user: "{{ d8_legacy_db_user }}"
+    login_password: "{{ d8_legacy_db_pass }}"
+  when: sync_site_db
+  tags: sync_site_db_recreate
+
+- name: Import synced database on destination server.
+  mysql_db:
+    name: "{{ d8_legacy_db_name }}"
+    state: import
+    login_user: "{{ d8_legacy_db_user }}"
+    login_password: "{{ d8_legacy_db_pass }}"
+    target: "{{ sync_site_dump_dest }}/{{ sync_site_db_name }}.sql"
+  when: sync_site_db
+  tags: sync_site_db_import
+
+- name: Make sure update module is disabled.
+  shell: "drush dis update -y"
+  args:
+    chdir: "{{ sync_site_dest_drupal_root }}"
+  when: sync_site_dest_disable_update
+  tags:
+    - sync_site_db_import
+    - sync_site_db_disable_update
+
+- name: Sync directories.
+  shell: "rsync -arz {{ hostvars[sync_site_db_source]['ansible_user'] }}@{{ hostvars[sync_site_db_source]['ansible_ssh_host'] }}:{{ item.src }} {{ item.dest }}"
+  with_items: "{{ sync_site_directories }}"
+  tags: sync_site_files
+
+- name: Make sure Drupal destination files directory is writeable.
+  file:
+    path: "{{ sync_site_dest_drupal_files_dir }}"
+    state: directory
+    recurse: yes
+    mode: "{{ sync_site_dest_files_mode }}"
+  become: yes
+  when: sync_site_dest_drupal_files_dir is defined
+  tags:
+    - sync_site_files
+    - sync_site_files_writeable
+
+- name: Clean up source database dump.
+  file:
+    path: "{{ sync_site_dump_dir }}/{{ sync_site_db_name }}.sql"
+    state: absent
+  delegate_to: "{{ sync_site_db_source }}"
+  when: sync_site_db
+  tags: sync_site_db_dump_clean

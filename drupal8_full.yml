@@ -6,6 +6,7 @@
   hosts: "{{ hosts }}"
   
   roles:
+    - { role: sync_site, tags: ['sync_site'], when: sync_site }
     - { role: drop_db, tags: ['drop_db'] }
     - { role: d8_composer_build, tags: ['d8_composer_build'] }
     - { role: d8_install, tags: ['d8_install'] }

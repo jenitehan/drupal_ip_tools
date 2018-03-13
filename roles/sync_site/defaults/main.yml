@@ -1,0 +1,30 @@
+---
+sync_site: no
+sync_site_db: no
+sync_site_method: mysqldump
+
+# Source database credentials.
+sync_site_db_host: localhost
+
+# Directory to store the database dump.
+sync_site_dump_dir: "/tmp"
+sync_site_dump_dest: "/tmp"
+
+# Source host for the database.
+sync_site_db_source: "{{ inventory_hostname }}"
+
+# Destination host for the database.
+sync_site_db_dest: "{{ inventory_hostname }}"
+
+# Directories to sync:
+sync_site_directories:
+  - src: /source/path/to/files
+    dest: /dest/path/to/files
+  - src: /another/source/to/files
+    dest: /another/dest/to/files
+
+# Permissions for destination files directory.
+sync_site_dest_files_mode: 0757
+
+# Disable the update module after destination database import.
+sync_site_dest_disable_update: no
