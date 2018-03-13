@@ -12,7 +12,7 @@
         'username' => '{{ d8_legacy_db_user }}',
         'password' => '{{ d8_legacy_db_pass }}',
         'prefix' => '',
-        'host' => 'localhost',
+        'host' => '{{ db_host }}',
         'port' => '',
         'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
         'driver' => 'mysql',
