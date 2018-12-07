@@ -1,0 +1,27 @@
+---
+# Sync database from live site.
+
+- name: Remove staging database.
+  mysql_db:
+    name: "{{ db_name }}"
+    state: absent
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_pass }}"
+  tags:
+    - staging_db_sync_drop
+    - staging_db_sync_recreate
+
+- name: Create staging database.
+  mysql_db:
+    name: "{{ db_name }}"
+    state: present
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_pass }}"
+  tags:
+    - staging_db_sync_create
+    - staging_db_sync_recreate
+
+- name: Sync database from live site.
+  shell: drush sql-sync @{{ live_domain }} @{{ domain }} -y
+  when: live_domain is defined
+  tags: staging_db_sync_sync

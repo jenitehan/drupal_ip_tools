@@ -1,0 +1,32 @@
+---
+# Sync files from live site to staging site.
+
+- name: Sync live site to staging.
+  synchronize:
+    src: "{{ live_project_dir }}/"
+    dest: "{{ project_dir }}"
+    delete: yes
+    recursive: yes
+    rsync_opts:
+      - "--exclude={{ live_exclude_files }}"
+  delegate_to: "{{ hosts }}"
+  tags: staging_files_sync_files
+
+- name: Add settings.local.php file with staging DB credentials.
+  template:
+    src: settings.local.php.j2
+    dest: "{{ docroot }}/sites/default/settings.local.php"
+  tags: staging_files_sync_settings_local
+
+- name: Remove files directory.
+  file:
+    path: "{{ files_dir }}"
+    state: absent
+  tags: staging_files_sync_files_dir
+
+- name: Create new files directory.
+  file:
+    path: "{{ files_dir }}"
+    state: directory
+    mode: 0777
+  tags: staging_files_sync_files_dir

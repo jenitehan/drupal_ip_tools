@@ -1,0 +1,5 @@
+---
+# Syncs a live site to a staging environment.
+
+- include: staging_files_sync.yml
+- include: staging_db_sync.yml

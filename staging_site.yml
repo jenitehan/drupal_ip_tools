@@ -1,0 +1,10 @@
+---
+- name: Sync a live site to a staging environment.
+  vars_files:
+    - vars/defaults.yml
+    - vars/{{ domain }}.yml
+  hosts: "{{ hosts }}"
+  
+  roles:
+    - { role: staging_site, tags: ['staging_site'] }
+    - { role: post_install, tags: ['post_install'] }
