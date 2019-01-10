@@ -132,8 +132,9 @@ assert_options(ASSERT_ACTIVE, TRUE);
  */
 $settings['skip_permissions_hardening'] = TRUE;
 
-// Config split.
-//$config['config_split.config_split.dev']['status'] = TRUE;
+{% if config_split_stage %}
+$config['config_split.config_split.stage']['status'] = TRUE;
+{% endif %}
 
 $databases['default']['default'] = array (
   'database' => '{{ db_name }}',
