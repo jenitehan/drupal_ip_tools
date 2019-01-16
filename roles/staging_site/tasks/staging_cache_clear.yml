@@ -1,0 +1,8 @@
+---
+# Sync files from live site to staging site.
+
+- name: Clear all caches.
+  shell: drush cr
+  args:
+    chdir: "{{ docroot }}"
+  tags: staging_cache_clear

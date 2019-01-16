@@ -12,7 +12,7 @@
   delegate_to: "{{ hosts }}"
   tags: staging_files_sync_files
 
-- name: Add settings.local.php file with staging DB credentials.
+- name: Add settings.local.php file.
   template:
     src: settings.local.php.j2
     dest: "{{ docroot }}/sites/default/settings.local.php"

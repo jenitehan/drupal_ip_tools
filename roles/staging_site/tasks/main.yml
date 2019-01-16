@@ -3,3 +3,5 @@
 
 - include: staging_files_sync.yml
 - include: staging_db_sync.yml
+- include: staging_config.yml
+- include: staging_cache_clear.yml

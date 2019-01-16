@@ -1,0 +1,16 @@
+---
+# Tasks for configuration.
+
+- name: Import config splits.
+  shell: drush csim {{ item }} -y
+  args:
+    chdir: "{{ docroot }}"
+  with_items: "{{ config_split_enable }}"
+  when: config_split_enable is defined
+  tags: staging_config_split_import
+
+- name: Import default config.
+  shell: drush cim -y
+  args:
+    chdir: "{{ docroot }}"
+  tags: staging_config_import_default

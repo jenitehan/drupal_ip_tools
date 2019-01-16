@@ -132,10 +132,6 @@ assert_options(ASSERT_ACTIVE, TRUE);
  */
 $settings['skip_permissions_hardening'] = TRUE;
 
-{% if config_split_stage %}
-$config['config_split.config_split.stage']['status'] = TRUE;
-{% endif %}
-
 $databases['default']['default'] = array (
   'database' => '{{ db_name }}',
   'username' => '{{ db_user }}',
@@ -146,3 +142,17 @@ $databases['default']['default'] = array (
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
   'driver' => 'mysql',
 );
+
+{% if config_split_enable is defined %}
+// Enable config splits.
+{% for item in config_split_enable %}
+$config['config_split.config_split.{{ item }}']['status'] = TRUE;
+{% endfor %}
+{% endif %}
+
+{% if config_split_disable is defined %}
+// Disable config splits.
+{% for item in config_split_disable %}
+$config['config_split.config_split.{{ item }}']['status'] = FALSE;
+{% endfor %}
+{% endif %}
