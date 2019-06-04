@@ -63,6 +63,13 @@
     - sync_site_db_import
     - sync_site_db_disable_update
 
+- name: Ensure sync directories destinations exist.
+  file:
+    path: "{{ item.dest }}"
+    state: directory
+    mode: 0755
+  with_items: "{{ sync_site_directories }}"
+
 - name: Sync directories.
   shell: "rsync -arz {{ hostvars[sync_site_db_source]['ansible_user'] }}@{{ hostvars[sync_site_db_source]['ansible_ssh_host'] }}:{{ item.src }} {{ item.dest }}"
   with_items: "{{ sync_site_directories }}"
