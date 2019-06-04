@@ -34,6 +34,8 @@ docroot: "{{ project_dir }}/web"
 files_dir: "{{ docroot }}/sites/default/files"
 private_files_dir: "{{ site_dir }}/private"
 config_dir: "{{ project_dir }}/config/sync"
+private_files_dir_setting: "../private"
+private_files_dir_path: "{{ project_dir }}/private"
 
 # Additional users
 # Creating commerce orders requires Commerce Drush to be installed in site.

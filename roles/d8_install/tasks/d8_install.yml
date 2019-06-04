@@ -7,21 +7,47 @@
     chdir: "{{ docroot }}"
   tags: d8_install_drupal
 
+- name: Change file permissions of sites/default directory.
+  file:
+    path: "{{ docroot }}/sites/default"
+    state: directory
+    mode: 0755
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+  become: yes
+  tags: d8_install_protect_files
+
 - name: Protect settings.php file.
   file:
     path: "{{ docroot }}/sites/default/settings.php"
     mode: 0644
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
   become: yes
   tags: d8_install_protect_files
 
-- name: Make sure files directory is writable.
+- name: Make sure public files directory is writable.
   file:
     path: "{{ files_dir }}"
     state: directory
     recurse: yes
     mode: 0777
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
   become: yes
-  tags: d8_install_files_writable
+  tags: d8_install_public_files_writable
+
+- name: Make sure private files directory is writable.
+  file:
+    path: "{{ private_files_dir_path }}"
+    state: directory
+    recurse: yes
+    mode: 0777
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+  become: yes
+  when: private_files_dir_path is defined
+  tags: d8_install_private_files_writable
 
 - name: Create config sync directory.
   file:
@@ -53,3 +79,16 @@
   become: yes
   notify: clear drupal 8 cache
   tags: d8_install_add_config_settings
+
+- name: Set private files directory location.
+  blockinfile:
+    dest: "{{ docroot }}/sites/default/settings.php"
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+    marker: "# {mark} ANSIBLE MANAGED PRIVATE FILES DIRECTORY"
+    block: |
+      $settings['file_private_path'] = '{{ private_files_dir_setting }}';
+  become: yes
+  when: private_files_dir_setting is defined
+  notify: clear drupal 8 cache
+  tags: d8_install_add_private_files_dir_settings

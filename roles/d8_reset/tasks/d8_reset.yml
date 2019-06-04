@@ -33,7 +33,7 @@
     insertafter: "parameters:"
     state: absent
   become: yes
-  notify: clear drupal 8 cache
+  #notify: clear drupal 8 cache
   tags: d8_reset_remove_twig_debug
 
 - name: Remove files directory.
@@ -49,6 +49,23 @@
     mode: 0777
     owner: "{{ file_owner }}"
     group: "{{ file_group }}"
+  tags: d8_reset_files_dir
+
+- name: Remove private files directory.
+  file:
+    path: "{{ private_files_dir_path }}"
+    state: absent
+  when: private_files_dir_path is defined
+  tags: d8_reset_files_dir
+
+- name: Create new private files directory.
+  file:
+    path: "{{ private_files_dir_path }}"
+    state: directory
+    mode: 0777
+    owner: "{{ file_owner }}"
+    group: "{{ file_group }}"
+  when: private_files_dir_path is defined
   tags: d8_reset_files_dir
 
 - name: Remove config directory.
