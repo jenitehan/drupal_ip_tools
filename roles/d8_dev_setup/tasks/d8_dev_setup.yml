@@ -76,7 +76,7 @@
   tags: d8_dev_setup_protect_files
 
 - name: Enable developer modules.
-  command: drush en {{ item }} -y
+  shell: drush en {{ item }} -y
   args:
     chdir: "{{ docroot }}"
   with_items: "{{ d8_dev_modules }}"
@@ -84,7 +84,7 @@
 
 # Setting this in the DB and not in settings.local.php since it's handy to change this in the UI sometimes.
 - name: Set up devel module.
-  command: drush config-set devel.settings devel_dumper {{ devel_dumper }} -y
+  shell: drush config-set devel.settings devel_dumper {{ devel_dumper }} -y
   args:
     chdir: "{{ docroot }}"
   tags: d8_dev_setup_devel_dumper

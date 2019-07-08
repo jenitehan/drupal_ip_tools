@@ -1,6 +1,6 @@
 ---
 
 - name: clear drupal 8 cache
-  command: drush cr
+  shell: drush cr
   args:
     chdir: "{{ docroot }}"
