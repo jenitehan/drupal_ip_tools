@@ -21,7 +21,27 @@
     - staging_db_sync_create
     - staging_db_sync_recreate
 
-- name: Sync database from live site.
-  shell: drush sql-sync @{{ live_domain }} @{{ domain }} -y
+- name: Create live site database dump.
+  shell: "drush sql-dump --result-file=/tmp/{{ live_domain }}.sql"
+  args:
+    chdir: "{{ live_docroot }}"
   when: live_domain is defined
   tags: staging_db_sync_sync
+
+- name: Import database to staging.
+  mysql_db:
+    name: "{{ db_name }}"
+    state: import
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_pass }}"
+    target: "/tmp/{{ live_domain }}.sql"
+  when: live_domain is defined
+  tags: staging_db_sync_sync
+
+- name: Remove database dump.
+  file:
+    path: "/tmp/{{ live_domain }}.sql"
+    state: absent
+  tags:
+    - staging_db_sync_sync
+    - staging_db_sync_dump_remove
