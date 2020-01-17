@@ -75,7 +75,7 @@
     group: "{{ file_group }}"
     marker: "# {mark} ANSIBLE MANAGED CONFIG SYNC"
     block: |
-      $config_directories['sync'] = '../config/sync';
+      $settings['config_sync_directory'] = '../config/sync';
   become: yes
   notify: clear drupal 8 cache
   tags: d8_install_add_config_settings
