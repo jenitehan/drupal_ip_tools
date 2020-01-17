@@ -13,6 +13,7 @@
   copy:
     src: "{{ docroot }}/sites/default/default.settings.php"
     dest: "{{ docroot }}/sites/default/settings.php"
+    remote_src: yes
     mode: 0777
     owner: "{{ file_owner }}"
     group: "{{ file_group }}"
