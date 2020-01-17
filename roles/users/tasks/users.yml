@@ -9,7 +9,7 @@
   tags: users_create_users
 
 - name: Assign roles to additional users.
-  shell: drush user-add-role "{{ item.1 }}" --name={{ item.0.name }} -y
+  shell: drush user-add-role "{{ item.1 }}" {{ item.0.name }} -y
   args:
     chdir: "{{ docroot }}"
   with_subelements:
